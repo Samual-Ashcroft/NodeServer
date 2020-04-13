@@ -12,4 +12,4 @@ The Trello board for this projects documentation can be found here:
 https://trello.com/b/VCssENGW/sa-webapp-db-project
 
 The project has been hosted and should be findable here while this project is running:
-https://157.245.246.105:5000/
+157.245.246.105:5000/
