@@ -32,8 +32,31 @@ app.get('/', (req, res) =>{
     res.render('index');
 });
 
+app.get('/butt', (req, res) =>{
+    // insert query
+    mysql.query(
+        'INSERT INTO people (firstname, lastname, contact_info, notes) VALUES (?, ?, ?, ?)',
+        ['Bob', 'Barker', 'bob@fridge.com', 'Bob is a furious advocate for attack helicoptors'],
+        function (err, rows) {
+            // rows contains info about what was inserted
+            console.log(rows);
+            console.log('id of the inserted row', rows.insertId);
+        }
+    );
+});
+
+app.get('/buttocks', (req, res) =>{
+    // select query
+    mysql.query('SELECT * FROM people', 
+    function(err, data) {
+        console.log(data);
+        res.json(data);
+    });
+});
+
 app.post('/submit', (req, res) =>{
     res.json(req.body);
+
 })
 
 // Members api routes
