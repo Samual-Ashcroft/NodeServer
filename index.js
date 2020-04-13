@@ -1,8 +1,18 @@
 const express = require('express');
 const path = require('path');
+const mysql2 = require('mysql2');
 
 const logger = require('./middleware/logger')
 const app = express();
+
+//Database stuff
+var mysql = mysql2.createPool({
+    connectionLimit: 100,
+    host     : 'localhost',
+    user     : 'fraudtech_client',
+    password : 'Fraudulent',
+    database : 'fraudtech_feature_request'
+});
 
 //Set directory and views engine as handlebars
 app.set('views', path.join(__dirname, "views"));
