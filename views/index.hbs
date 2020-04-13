@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <link rel="stylesheet" href="css/style.css" />
+        <title>Fraudtech</title>
+    </head>
+    <body>
+        <h1>Fraudtech feature request</h1>
+    </body>
+
+</html>
+
+<html lang="en">   
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+      <link rel="stylesheet" href="css/style.css" />
+      <title>Form Validation</title>      
+      <script type = "text/javascript">
+        //<!--
+           // Form validation code will come here.
+           function validate() {
+           
+              if( document.myForm.Name.value == "" ) {
+                 alert( "Please provide your name!" );
+                 document.myForm.Name.focus() ;
+                 return false;
+              }
+              if( document.myForm.EMail.value == "" ) {
+                 alert( "Please provide your Email!" );
+                 document.myForm.EMail.focus() ;
+                 return false;
+              }
+              if( document.myForm.Zip.value == "" || isNaN( document.myForm.Zip.value ) ||
+                 document.myForm.Zip.value.length != 4 ) {
+                 
+                 alert( "Please provide a zip in the format ####." );
+                 document.myForm.Zip.focus() ;
+                 return false;
+              }
+              if( document.myForm.Country.value == "-1" ) {
+                 alert( "Please provide your country!" );
+                 return false;
+              }
+              var emailID = document.myForm.EMail.value;
+              atpos = emailID.indexOf("@");
+              dotpos = emailID.lastIndexOf(".");
+         
+              if (atpos < 1 || ( dotpos - atpos < 2 )) {
+                alert("Please enter correct email ID")
+                document.myForm.EMail.focus() ;
+                return false;
+              }
+              return( true );
+           }
+
+           function downloadData(contentType,data,filename){
+               
+               var link=document.createElement("A");
+               link.setAttribute("href",encodeURI("data:"+contentType+","+data));
+               link.setAttribute("style","display:none");
+               link.setAttribute("download",filename);
+               document.body.appendChild(link); //needed for firefox
+               console.log(link.outerHTML);
+               link.click();
+               setTimeout(function(){
+                  document.body.removeChild(link);
+               },1000);
+            }
+            
+            function fromToXml(form){
+               var xmldata=['<?xml version="1.0"?>'];
+                  xmldata.push("<form>");
+               var inputs=form.elements;
+               for(var i=0;i<inputs.length;i++){
+                  var el=document.createElement("ELEMENT");
+                  if (inputs[i].name){
+                     el.setAttribute("name",inputs[i].name);
+                     el.setAttribute("value",inputs[i].value);
+                     xmldata.push(el.outerHTML);
+                  }
+                  
+               }
+               xmldata.push("</form>");
+               return xmldata.join("\n");
+            }
+            
+            
+            function download(frm){
+               
+               if (!validate()){
+                  alert("Please enter correct email ID")
+                  document.myForm.EMail.focus() ;
+                  return false;
+               }
+               var data=fromToXml(frm);
+               console.log(data);
+               
+               downloadData("text/xml",data,"export.xml");
+            }
+
+            var button = document.querySelector('addReqFeature');
+            var form = document.querySelector('myForm');
+            var n = 1;
+
+            button.addEventListener('click', function (event) {
+               n++;
+
+               // create new textarea
+               var new_textarea = document.createElement('textarea');
+               new_textarea.setAttribute('id', 'feature_' + n);
+               
+               // create label for textarea
+               var new_label = document.createElement('label');
+               new_label.setAttribute('for', new_text_area.id)
+               new_label.textContent = 'Feature ' + n + ' Description'
+
+               // add label and textarea to the form
+               myForm.reqFeatures.appendChild(new_label);
+               myForm.reqFeatures.appendChild(new_textarea);
+            });
+        //-->
+     </script>  
+   </head>
+   
+   <body>
+      <form action = "./submit" name = "myForm" onsubmit = "return(validate());" method = "POST">
+         <table cellspacing = "2" cellpadding = "2" border = "1">
+
+            <tr>
+               <td align = "right">Logon</td>
+               <td><input type = "text" name = "Login" /></td>
+            </tr>
+
+            <tr>
+               <td align = "right">Name</td>
+               <td><input type = "text" name = "Name" /></td>
+            </tr>
+            
+            <tr>
+               <td align = "right">What is the business proccess name/tool name</td>
+               <td><textarea name = "ProcName" rows = "5" cols = "80"/>
+               type your process name here
+               </textarea></td>
+            </tr>
+            
+            <tr>
+               <td align = "right">Please provide a brief summary of the current business process and time taken to complete</td>
+               <td><textarea name = "OldDesc"  rows = "5" cols = "80"/>
+               Give us the description of the old process here
+               </textarea></td>
+            </tr>
+
+            <tr>
+               <td align = "right">How many staff are or will use the tool/process</td>
+               <td>
+                  <input type = "text" name = "NoStaff" />
+               </td>
+            </tr>
+
+            <tr>
+               <td align = "right">Please provide a numbered list of all the required features</td>
+               <td id = reqFeatures>
+                  <button type= "button" id="addReqFeature">Add element
+               </td>
+            </tr>
+
+            <tr>
+               <td align = "right">Please attach any supporting documents</td>
+               <td>
+                  <input type = "file" name = "Attach" />
+               </td>
+            </tr>
+            
+            <tr>
+               <td align = "right"></td>
+               <td>
+                  <input type = "submit" value = "Submit" id = "Submit"/>
+                  <button type= "button" value = "Download" onclick="download(myForm)" id="Download" />Download
+
+                  </td>
+            </tr>
+            
+         </table>
+      </form>      
+   </body>
+</html>
