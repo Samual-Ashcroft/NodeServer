@@ -20,7 +20,71 @@
       <meta http-equiv="X-UA-Compatible" content="ie=edge" />
       <link rel="stylesheet" href="css/style.css" />
       <title>Form Validation</title>      
-      <script type = "text/javascript">
+      
+   </head>
+   
+   <body>
+      <form action = "./submit" id = "myForm" name = "myForm" onsubmit = "return(validate());" method = "POST">
+         <table cellspacing = "2" cellpadding = "2" border = "1">
+
+            <tr>
+               <td align = "right">Login</td>
+               <td><input type = "text" name = "Login" /></td>
+            </tr>
+
+            <tr>
+               <td align = "right">Name</td>
+               <td><input type = "text" name = "Name" /></td>
+            </tr>
+            
+            <tr>
+               <td align = "right">What is the business proccess name/tool name</td>
+               <td><textarea name = "ProcName" rows = "5" cols = "80"/>
+               type your process name here
+               </textarea></td>
+            </tr>
+            
+            <tr>
+               <td align = "right">Please provide a brief summary of the current business process and time taken to complete</td>
+               <td><textarea name = "OldDesc"  rows = "5" cols = "80"/>
+               Give us the description of the old process here
+               </textarea></td>
+            </tr>
+
+            <tr>
+               <td align = "right">How many staff are or will use the tool/process</td>
+               <td>
+                  <input type = "number" name = "NoStaff" min = "1"/>
+               </td>
+            </tr>
+
+            <tr>
+               <td align = "right">Please provide a numbered list of all the required features</td>
+               <td id = "reqFeatures">
+                  <input type= "button" value = "Add element" id="addReqFeature">
+               </td>
+            </tr>
+
+            <tr>
+               <td align = "right">Please attach any supporting documents</td>
+               <td>
+                  <input type = "file" name = "Attach" />
+               </td>
+            </tr>
+            
+            <tr>
+               <td align = "right"></td>
+               <td>
+                  <input type = "submit" value = "Submit" id = "Submit"/>
+                  <input type= "button" value = "Download" onclick="download(myForm)" id="Download" />
+
+                  </td>
+            </tr>
+            
+         </table>
+      </form>      
+   </body>
+   <script type = "text/javascript">
         //<!--
            // Form validation code will come here.
            function validate() {
@@ -29,31 +93,6 @@
                  alert( "Please provide your name!" );
                  document.myForm.Name.focus() ;
                  return false;
-              }
-              if( document.myForm.EMail.value == "" ) {
-                 alert( "Please provide your Email!" );
-                 document.myForm.EMail.focus() ;
-                 return false;
-              }
-              if( document.myForm.Zip.value == "" || isNaN( document.myForm.Zip.value ) ||
-                 document.myForm.Zip.value.length != 4 ) {
-                 
-                 alert( "Please provide a zip in the format ####." );
-                 document.myForm.Zip.focus() ;
-                 return false;
-              }
-              if( document.myForm.Country.value == "-1" ) {
-                 alert( "Please provide your country!" );
-                 return false;
-              }
-              var emailID = document.myForm.EMail.value;
-              atpos = emailID.indexOf("@");
-              dotpos = emailID.lastIndexOf(".");
-         
-              if (atpos < 1 || ( dotpos - atpos < 2 )) {
-                alert("Please enter correct email ID")
-                document.myForm.EMail.focus() ;
-                return false;
               }
               return( true );
            }
@@ -103,9 +142,9 @@
                downloadData("text/xml",data,"export.xml");
             }
 
-            var button = document.querySelector('addReqFeature');
-            var form = document.querySelector('myForm');
-            var n = 1;
+            var button = document.getElementById("addReqFeature");
+            var element = document.getElementById("reqFeatures");
+            var n = 0;
 
             button.addEventListener('click', function (event) {
                n++;
@@ -113,79 +152,17 @@
                // create new textarea
                var new_textarea = document.createElement('textarea');
                new_textarea.setAttribute('id', 'feature_' + n);
+               new_textarea.setAttribute('name', 'feature_' + n);
                
                // create label for textarea
                var new_label = document.createElement('label');
-               new_label.setAttribute('for', new_text_area.id)
+               new_label.setAttribute('for', new_textarea.id)
                new_label.textContent = 'Feature ' + n + ' Description'
 
                // add label and textarea to the form
-               myForm.reqFeatures.appendChild(new_label);
-               myForm.reqFeatures.appendChild(new_textarea);
+               element.appendChild(new_label);
+               element.appendChild(new_textarea);
             });
         //-->
      </script>  
-   </head>
-   
-   <body>
-      <form action = "./submit" name = "myForm" onsubmit = "return(validate());" method = "POST">
-         <table cellspacing = "2" cellpadding = "2" border = "1">
-
-            <tr>
-               <td align = "right">Login</td>
-               <td><input type = "text" name = "Login" /></td>
-            </tr>
-
-            <tr>
-               <td align = "right">Name</td>
-               <td><input type = "text" name = "Name" /></td>
-            </tr>
-            
-            <tr>
-               <td align = "right">What is the business proccess name/tool name</td>
-               <td><textarea name = "ProcName" rows = "5" cols = "80"/>
-               type your process name here
-               </textarea></td>
-            </tr>
-            
-            <tr>
-               <td align = "right">Please provide a brief summary of the current business process and time taken to complete</td>
-               <td><textarea name = "OldDesc"  rows = "5" cols = "80"/>
-               Give us the description of the old process here
-               </textarea></td>
-            </tr>
-
-            <tr>
-               <td align = "right">How many staff are or will use the tool/process</td>
-               <td>
-                  <input type = "text" name = "NoStaff" />
-               </td>
-            </tr>
-
-            <tr>
-               <td align = "right">Please provide a numbered list of all the required features</td>
-               <td id = reqFeatures>
-                  <input type= "button" value = "Add element" id="addReqFeature">Add element
-               </td>
-            </tr>
-
-            <tr>
-               <td align = "right">Please attach any supporting documents</td>
-               <td>
-                  <input type = "file" name = "Attach" />
-               </td>
-            </tr>
-            
-            <tr>
-               <td align = "right"></td>
-               <td>
-                  <input type = "submit" value = "Submit" id = "Submit"/>
-                  <input type= "button" value = "Download" onclick="download(myForm)" id="Download" />
-
-                  </td>
-            </tr>
-            
-         </table>
-      </form>      
-   </body>
 </html>
