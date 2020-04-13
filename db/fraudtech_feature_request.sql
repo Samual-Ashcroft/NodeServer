@@ -7,8 +7,11 @@ Author - Samual Ashcroft*/
 /*Creating the Schema*/
 CREATE SCHEMA IF NOT EXISTS `fraudtech_feature_request` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin 
 
+/*Using the new schema*/
+USE `fraudtech_feature_request`;
+
 /*Creating the user fraudtech_admin with all privs*/
-CREATE USER 'fraudtech_admin' IDENTIFIED BY 'FraudulentExtra';
+CREATE USER 'fraudtech_admin' IDENTIFIED BY 'FraudulentExtra12';
 
 GRANT ALL ON `fraudtech_feature_request`.* TO 'fraudtech_admin';
 GRANT SELECT ON TABLE `fraudtech_feature_request`.* TO 'fraudtech_admin';
@@ -30,7 +33,6 @@ CREATE TABLE IF NOT EXISTS `fraudtech_feature_request`.`people` (
   `lastname` VARCHAR(45) NOT NULL,
   `contact_info` VARCHAR(45) NOT NULL,
   `notes` TEXT NOT NULL,
-  UNIQUE INDEX `LOGid_UNIQUE` (`LOGid` ASC) VISIBLE,
   PRIMARY KEY (`LOGid`))
 ENGINE = InnoDB
 
@@ -40,7 +42,6 @@ CREATE TABLE IF NOT EXISTS `fraudtech_feature_request`.`teams` (
   `team_name` VARCHAR(45) NULL,
   `decription` TEXT NULL,
   `notes` TEXT NULL,
-  UNIQUE INDEX `TEid_UNIQUE` (`TEid` ASC) VISIBLE,
   PRIMARY KEY (`TEid`))
 ENGINE = InnoDB
 
@@ -51,7 +52,6 @@ CREATE TABLE IF NOT EXISTS `fraudtech_feature_request`.`team_membership` (
   `LOGid` INT NOT NULL,
   `Notes` TEXT NULL,
   PRIMARY KEY (`TMid`),
-  UNIQUE INDEX `TMid_UNIQUE` (`TMid` ASC) VISIBLE,
   CONSTRAINT `TEid`
     FOREIGN KEY (`TMid`)
     REFERENCES `fraudtech_feature_request`.`teams` (`TEid`)
@@ -73,7 +73,6 @@ CREATE TABLE IF NOT EXISTS `fraudtech_feature_request`.`feature_request` (
   `OldDesc` VARCHAR(45) NOT NULL,
   `date` DATETIME NOT NULL,
   PRIMARY KEY (`FRid`),
-  UNIQUE INDEX `FRid_UNIQUE` (`FRid` ASC, `LOGid` ASC) INVISIBLE,
   CONSTRAINT `LOGid`
     FOREIGN KEY (`FRid`)
     REFERENCES `fraudtech_feature_request`.`people` (`LOGid`)
