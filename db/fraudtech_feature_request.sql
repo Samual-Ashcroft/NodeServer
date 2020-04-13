@@ -2,10 +2,26 @@
 fraudtech_feature_request database, create all of 
 its tables and all of the foreign key relationships 
 and constraints
-
 Author - Samual Ashcroft*/
 
+/*Creating the Schema*/
 CREATE SCHEMA IF NOT EXISTS `fraudtech_feature_request` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin 
+
+/*Creating the user fraudtech_admin with all privs*/
+CREATE USER 'fraudtech_admin' IDENTIFIED BY 'FraudulentExtra';
+
+GRANT ALL ON `fraudtech_feature_request`.* TO 'fraudtech_admin';
+GRANT SELECT ON TABLE `fraudtech_feature_request`.* TO 'fraudtech_admin';
+GRANT SELECT, INSERT, TRIGGER ON TABLE `fraudtech_feature_request`.* TO 'fraudtech_admin';
+GRANT SELECT, INSERT, TRIGGER, UPDATE, DELETE ON TABLE `fraudtech_feature_request`.* TO 'fraudtech_admin';
+GRANT EXECUTE ON ROUTINE `fraudtech_feature_request`.* TO 'fraudtech_admin';
+
+/*Creating the webapp client user fraudtech_client with limited privs*/
+CREATE USER 'fraudtech_client' IDENTIFIED BY 'Fraudulent';
+
+GRANT SELECT, INSERT, TRIGGER ON TABLE `fraudtech_feature_request`.* TO 'fraudtech_client';
+GRANT SELECT ON TABLE `fraudtech_feature_request`.* TO 'fraudtech_client';
+
 
 /*Creating people table*/
 CREATE TABLE IF NOT EXISTS `fraudtech_feature_request`.`people` (
