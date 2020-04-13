@@ -1,4 +1,5 @@
-#reqFeatures label {
+#reqFeatures label,
+#stakeHolders label {
     display: block;
     margin-top: 20px;
 }
@@ -7,3 +8,17 @@
     display: block;
 }
 
+#stakeHolders input[type = "text"] {
+    display: block;
+}
+
+table {
+    border-collapse: collapse;
+    width: 30%;
+}
+
+table, th, td {
+    border: 1px solid black;
+    width: 30%;
+    height: 50px;
+}

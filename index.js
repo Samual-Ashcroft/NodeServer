@@ -22,6 +22,10 @@ app.get('/', (req, res) =>{
     res.render('index');
 });
 
+app.post('/submit', (req, res) =>{
+    res.json(req.body);
+})
+
 // Members api routes
 app.use('/api/members', require('./routes/api/members'));
 

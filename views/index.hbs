@@ -29,26 +29,27 @@
 
             <tr>
                <td align = "right">Login</td>
-               <td><input type = "text" name = "Login" /></td>
+               <td><input type = "text" name = "Login" placeholder = "Enter your login id here"/></td>
             </tr>
 
             <tr>
                <td align = "right">Name</td>
-               <td><input type = "text" name = "Name" /></td>
+               <td><input type = "text" name = "Name" placeholder = "Enter your name here"/></td>
+            </tr>
+
+            <tr>
+               <td align = "right">Team</td>
+               <td><input type = "text" name = "Team" placeholder = "Enter your Team ID here"/></td>
             </tr>
             
             <tr>
                <td align = "right">What is the business proccess name/tool name</td>
-               <td><textarea name = "ProcName" rows = "5" cols = "80"/>
-               type your process name here
-               </textarea></td>
+               <td><textarea name = "ProcName" rows = "5" cols = "80" placeholder = "type your process name here"></textarea></td>
             </tr>
             
             <tr>
                <td align = "right">Please provide a brief summary of the current business process and time taken to complete</td>
-               <td><textarea name = "OldDesc"  rows = "5" cols = "80"/>
-               Give us the description of the old process here
-               </textarea></td>
+               <td><textarea name = "OldDesc" rows = "5" cols = "80" placeholder = "Give us the description of the old process here"></textarea></td>
             </tr>
 
             <tr>
@@ -66,6 +67,18 @@
             </tr>
 
             <tr>
+               <td align = "right">Please outline any ongoing maintenance that may be required for this enhancement/process</td>
+               <td><textarea name = "maintenance"  rows = "5" cols = "80" placeholder = "Write about ongoing maintenance here"/></textarea></td>
+            </tr>
+
+            <tr>
+               <td align = "right">Please identify all known stakeholders of the current business process</td>
+               <td id = "stakeHolders">
+                  <input type= "button" value = "Add Stakeholder" id="addStakeHolder">
+               </td>
+            </tr>
+
+            <tr>
                <td align = "right">Please attach any supporting documents</td>
                <td>
                   <input type = "file" name = "Attach" />
@@ -78,7 +91,7 @@
                   <input type = "submit" value = "Submit" id = "Submit"/>
                   <input type= "button" value = "Download" onclick="download(myForm)" id="Download" />
 
-                  </td>
+               </td>
             </tr>
             
          </table>
@@ -88,12 +101,20 @@
         //<!--
            // Form validation code will come here.
            function validate() {
-           
-              if( document.myForm.Name.value == "" ) {
-                 alert( "Please provide your name!" );
-                 document.myForm.Name.focus() ;
-                 return false;
-              }
+              
+               // get a reference to all input[text], input[number], and textarea's on the page
+               var inputs = document.querySelectorAll('input[type=text], input[type=number], textarea');
+
+               // inputs is an array of elements
+               for (var element of inputs) {
+                  console.log(element.name, element.value);
+                  if (element.value == "" ) {
+                     alert( "Please provide details for:" + element.name);
+                     element.focus();
+                     return false
+                  }
+               }
+
               return( true );
            }
 
@@ -132,8 +153,6 @@
             function download(frm){
                
                if (!validate()){
-                  alert("Please enter correct email ID")
-                  document.myForm.EMail.focus() ;
                   return false;
                }
                var data=fromToXml(frm);
@@ -142,26 +161,60 @@
                downloadData("text/xml",data,"export.xml");
             }
 
-            var button = document.getElementById("addReqFeature");
-            var element = document.getElementById("reqFeatures");
-            var n = 0;
+            var button1 = document.getElementById("addReqFeature");
+            var element1 = document.getElementById("reqFeatures");
+            var n1 = 0;
 
-            button.addEventListener('click', function (event) {
-               n++;
+            button1.addEventListener('click', function (event) {
+               n1++;
 
                // create new textarea
                var new_textarea = document.createElement('textarea');
-               new_textarea.setAttribute('id', 'feature_' + n);
-               new_textarea.setAttribute('name', 'feature_' + n);
+               new_textarea.setAttribute('id', 'feature_' + n1);
+               new_textarea.setAttribute('name', 'feature_' + n1);
+               //rows = "5" cols = "80"
+               new_textarea.setAttribute('rows', '5');
+               new_textarea.setAttribute('cols', '80');
+               new_textarea.setAttribute('placeholder', 'Enter the desired feature here');
                
                // create label for textarea
                var new_label = document.createElement('label');
                new_label.setAttribute('for', new_textarea.id)
-               new_label.textContent = 'Feature ' + n + ' Description'
+               new_label.textContent = 'Feature ' + n1 + ' Description'
 
                // add label and textarea to the form
-               element.appendChild(new_label);
-               element.appendChild(new_textarea);
+               element1.appendChild(new_label);
+               element1.appendChild(new_textarea);
+            });
+
+            /*
+            <td align = "right">Please identify all known stakeholders of the current business process</td>
+            <td id = "stakeHolders">
+               <input type= "button" value = "Add Stakeholder" id="addStakeHolder">
+            </td>
+            */
+            var button2 = document.getElementById("addStakeHolder");
+            var element2 = document.getElementById("stakeHolders");
+            var n2 = 0;
+
+            button2.addEventListener('click', function (event) {
+               n2++;
+
+               // create new input[text]
+               var new_text = document.createElement('input');
+               new_text.setAttribute('type', 'text');
+               new_text.setAttribute('id', 'stakeHolder_' + n2);
+               new_text.setAttribute('name', 'stakeHolder_' + n2);
+               new_text.setAttribute('placeholder', 'Enter the stakeholders name here');
+               
+               // create label for input[text]
+               var new_label = document.createElement('label');
+               new_label.setAttribute('for', new_text.id)
+               new_label.textContent = 'StakeHolder ' + n2
+
+               // add label and textarea to the form
+               element2.appendChild(new_label);
+               element2.appendChild(new_text);
             });
         //-->
      </script>  
