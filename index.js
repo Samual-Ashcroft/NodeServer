@@ -27,15 +27,31 @@ app.use(express.urlencoded({ extended: false}));
 
 // Set a static folder
 app.use(express.static(path.join(__dirname, 'public')));
+
 //Set a GET routine at '/'
 app.get('/', (req, res) =>{
     res.render('index');
 });
+app.get('/people_request', (req, res) =>{
+    console.log(req.query.login_qu);
 
-app.get('/butt', (req, res) =>{
+    // select query
+    mysql.query('SELECT * FROM people WHERE login = '+req.query.login_qu, 
+    function(err, data) {
+        console.log(data);
+        res.json(data);
+    });
+
+    res.json(req.query.login_qu+' Butt');
+    res.end();
+});
+
+//
+
+/*app.get('/butt', (req, res) =>{
     // insert query
     mysql.query(
-        'INSERT INTO people (firstname, lastname, contact_info, notes) VALUES (?, ?, ?, ?)',
+        'INSERT INTO people (firstName, lastName, contactInfo, notes) VALUES (?, ?, ?, ?)',
         ['Bob', 'Barker', 'bob@fridge.com', 'Bob is a furious advocate for attack helicoptors'],
         function (err, rows) {
             // rows contains info about what was inserted
@@ -52,41 +68,22 @@ app.get('/buttocks', (req, res) =>{
         console.log(data);
         res.json(data);
     });
-});
+});*/
 
 app.post('/submit', (req, res) =>{
     res.json(req.body);
+    /*{"Login":"123",
+    "Name":"Placeholder Person", "Team":"12",
+    "ProcName":"afsdf", "OldDesc":"gjhg",
+    "NoStaff":"6", "feature_1":"sdgas",
+    "feature_2":"yes","feature_3":"ddddddd",
+    "maintenance":"ongoing maintenencement",
+    "stakeHolder_1":"banana","stakeHolder_2":"apple",
+    "stakeHolder_3":"Jeffers","Attach":"export (6).xml"} */
 
 })
-
-// Members api routes
-app.use('/api/members', require('./routes/api/members'));
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 
-/*
-const app = require('express')();
-const path = require('path');
-
-//Set directory and views engine as handlebars
-app.set('views', path.join(__dirname, "views"));
-app.set("view engine", "hbs");
-
-//Set a GET routine at '/'
-app.get('/', (req, res) =>{
-    let peoplelist = getRandomList(); //fetch a random list of people's names
-    res.render('index', {people: peoplelist});
-});
-
-//people list generator
-let getRandomList = () => {
-    let list = ["ada", "turing", "lovelace", "nuemann", "gracehopper"];
-    let limit = Math.floor(Math.random() * (list.length - 1 - 0) + 0); //generating random number between 0 and 4
-    return list.slice(limit);
-}
-
-//Setting the port for listening
-app.listen(5000);
-*/
