@@ -36,12 +36,11 @@ app.get('/people_request', (req, res) =>{
     console.log(req.query.login_qu);
 
     // select query
-    mysql.query('SELECT * FROM people WHERE login = ?', [req.query.login_qu]
+    mysql.query('SELECT * FROM people WHERE login = ?', [req.query.login_qu],
     function(err, data) {
         console.log(data);
         res.json(data);
     });
-    res.end();
 });
 
 //

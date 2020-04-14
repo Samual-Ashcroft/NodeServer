@@ -1,3 +1,3 @@
 git pull
-mysql -u root -p FraudulentExtra < ./db/fraudtech_feature_request.sql
+mysql -u root -pFraudulentExtra < ./db/fraudtech_feature_request.sql
 npm start dev
