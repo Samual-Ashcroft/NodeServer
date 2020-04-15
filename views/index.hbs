@@ -224,6 +224,13 @@
             //var xhttp = new XMLHttpRequestEventTarget()
 
             LOGid_JS.addEventListener('change', function (event) {
+               document.getElementById("LOGid_ht").value = "";
+               document.getElementById("firstname_ht").value = "";
+               document.getElementById("lastname_ht").value = "";
+               document.getElementById("contact_info_ht").value = "";
+               document.getElementById("notes_ht").value = "";
+               document.getElementById("name_ht").value = "";
+               document.getElementById("name_ht").removeAttribute("readonly");
                document.getElementById("firstname_ht").removeAttribute("hidden");
                document.getElementById("lastname_ht").removeAttribute("hidden");
                document.getElementById("contact_info_ht").removeAttribute("hidden");
@@ -236,11 +243,13 @@
                xhttp.onreadystatechange = function() {
                   if (this.readyState == 4 && this.status == 200) {
                      var data = JSON.parse(this.responseText);
+
                      console.log(data); //throwing to the console log
+
+                     //if the database found the user, auto populating the 'people' element of the form
                      if (data.length != 0) {
 
-                        document.getElementById("LOGid_ht").removeAttribute("hidden");
-
+                        //autofilling the data
                         document.getElementById("LOGid_ht").value = data[0]['LOGid'];
                         document.getElementById("firstname_ht").value = data[0]['firstName'];
                         document.getElementById("lastname_ht").value = data[0]['lastName'];
@@ -248,6 +257,12 @@
                         document.getElementById("notes_ht").value = data[0]['notes'];
 
                         document.getElementById("name_ht").value = data[0]['firstName']+' '+data[0]['lastName'];
+                        document.getElementById("name_ht").setAttribute("readonly", "");
+
+                        document.getElementById("firstname_ht").setAttribute("hidden", "");
+                        document.getElementById("lastname_ht").setAttribute("hidden", "");
+                        document.getElementById("contact_info_ht").setAttribute("hidden", "");
+                        document.getElementById("notes_ht").setAttribute("hidden", "");
                      }
                   }
                };
