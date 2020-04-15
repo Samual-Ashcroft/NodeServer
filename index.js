@@ -105,8 +105,6 @@ app.post('/addTeamRequest', (req, res) =>{
         function (err, rows) {
             // rows contains info about what was inserted
             console.log(req.body);
-            
-            console.log('id of the inserted row', rows.insertId);
     });
 });
 
