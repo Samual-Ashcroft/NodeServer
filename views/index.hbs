@@ -32,7 +32,7 @@
 
             <tr>
                <td align = "right">Name</td>
-               <td><input type = "text" name = "Name" placeholder = "Enter your name here"/></td>
+               <td><input id = "name_ht" type = "text" name = "Name" placeholder = "Enter your name here"/></td>
             </tr>
 
             <tr>
@@ -235,7 +235,20 @@
                var xhttp = new XMLHttpRequest();
                xhttp.onreadystatechange = function() {
                   if (this.readyState == 4 && this.status == 200) {
-                     console.log(JSON.parse(this.responseText)); //throwing to the console log
+                     var data = JSON.parse(this.responseText);
+                     console.log(data); //throwing to the console log
+                     if (data.length != 0) {
+
+                        document.getElementById("LOGid_ht").removeAttribute("hidden");
+
+                        document.getElementById("LOGid_ht").value = data[0]['LOGid'];
+                        document.getElementById("firstname_ht").value = data[0]['firstName'];
+                        document.getElementById("lastname_ht").value = data[0]['lastName'];
+                        document.getElementById("contact_info_ht").value = data[0]['contactInfo'];
+                        document.getElementById("notes_ht").value = data[0]['notes'];
+
+                        document.getElementById("name_ht").value = data[0]['firstName']+' '+data[0]['lastName'];
+                     }
                   }
                };
                xhttp.open("GET", "/people_request?login_qu="+document.getElementById("Login_ht").value, true); 
