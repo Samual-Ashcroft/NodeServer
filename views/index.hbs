@@ -18,26 +18,38 @@
       <form action = "./submit" id = "feature_request_form" name = "feature_request_form" onsubmit = "return(validate());" method = "POST">
          <table cellspacing = "2" cellpadding = "2" border = "1">
 
-            <tr id = "LOGid_element">
+            <tr>
+               <td align = "right">Team</td>
+
+               <td>
+                  <input hidden type = "text" id = "teams_TEid_ht" name = "teams_TEid" value = "-1"/>
+                  <input id = "teams_teamName_ht" type = "text" name = "teams_teamName" placeholder = "Enter your Team ID here"/>
+                  <textarea hidden id = "teams_description_ht" name = "teams_description" rows = "5" cols = "80" placeholder = "Enter the team mission statement here" /></textarea>
+                  <textarea hidden id = "teams_notes_ht" name = "teams_notes" rows = "5" cols = "80" placeholder = "Enter any notes here" /></textarea>
+               </td>
+               <td id = "addTeam">
+                  <input type= "button" value = "Add Team" id="addTeamRequest">
+               </td>
+            </tr>
+
+            <tr id = "people_LOGid_element">
                <td align = "right">Login</td>
                <td>
-                  <input hidden type = "text" id = "LOGid_ht" name = "LOGid" value = "1"/>
-                  <input type = "text" id = "Login_ht" name = "Login" placeholder = "Enter your unique login id here" required/>
-                  <input hidden type = "text" id = "firstname_ht" name = "firstname" placeholder = "Enter your first name here" />
-                  <input hidden type = "text" id = "lastname_ht" name = "lastname" placeholder = "Enter your last name here" />
-                  <input hidden type = "text" id = "contact_info_ht" name = "contact_info" size = "42" placeholder = "Enter your contact info here" required/>
-                  <textarea hidden id = "notes_ht" name = "notes" rows = "5" cols = "80" placeholder = "Enter any notes here" /></textarea>
+                  <input hidden type = "text" id = "people_LOGid_ht" name = "people_LOGid" value = "-1"/>
+                  <input type = "text" id = "people_Login_ht" name = "people_Login" placeholder = "Enter your unique login id here" required/>
+                  <input hidden type = "text" id = "people_firstname_ht" name = "people_firstname" placeholder = "Enter your first name here" />
+                  <input hidden type = "text" id = "people_lastname_ht" name = "people_lastname" placeholder = "Enter your last name here" />
+                  <input hidden type = "text" id = "people_contact_info_ht" name = "people_contact_info" size = "42" placeholder = "Enter your contact info here" required/>
+                  <textarea hidden id = "people_notes_ht" name = "people_notes" rows = "5" cols = "80" placeholder = "Enter any notes here" /></textarea>
+               </td>
+               <td id = "addPeople">
+                  <input type= "button" value = "Add Person" id="addPersonRequest">
                </td>
             </tr>
 
             <tr>
                <td align = "right">Name</td>
                <td><input id = "name_ht" type = "text" name = "Name" placeholder = "Enter your name here"/></td>
-            </tr>
-
-            <tr>
-               <td align = "right">Team</td>
-               <td><input type = "text" name = "Team" placeholder = "Enter your Team ID here"/></td>
             </tr>
             
             <tr>
@@ -216,31 +228,30 @@
                element2.appendChild(new_text);
             });
 
-            /*Dynamically check the database for that LOGid, 
-            and fill the elements firstname, lastname, contact 
-            details and notes
+            /*Dynamically check the database for that people_LOGid, 
+            and fill the elements people_firstname, people_lastname, contact 
+            details and people_notes
             */
-            var LOGid_JS = document.getElementById("Login_ht");
+            var people_LOGid_JS = document.getElementById("people_Login_ht");
             //var xhttp = new XMLHttpRequestEventTarget()
 
-            LOGid_JS.addEventListener('change', function (event) {
-               document.getElementById("LOGid_ht").value = "";
-               document.getElementById("firstname_ht").value = "";
-               document.getElementById("lastname_ht").value = "";
-               document.getElementById("contact_info_ht").value = "";
-               document.getElementById("notes_ht").value = "";
+            people_LOGid_JS.addEventListener('change', function (event) {
+               document.getElementById("people_LOGid_ht").value = "";
+               document.getElementById("people_firstname_ht").value = "";
+               document.getElementById("people_lastname_ht").value = "";
+               document.getElementById("people_contact_info_ht").value = "";
+               document.getElementById("people_notes_ht").value = "";
                document.getElementById("name_ht").value = "";
-               document.getElementById("name_ht").removeAttribute("readonly");
-               document.getElementById("firstname_ht").removeAttribute("hidden");
-               document.getElementById("lastname_ht").removeAttribute("hidden");
-               document.getElementById("contact_info_ht").removeAttribute("hidden");
-               document.getElementById("notes_ht").removeAttribute("hidden");
-               document.getElementById("firstname_ht").setAttribute("required", "");
-               document.getElementById("lastname_ht").setAttribute("required", "");
-               document.getElementById("contact_info_ht").setAttribute("required", "");
-               document.getElementById("notes_ht").setAttribute("required", "");
-               var xhttp = new XMLHttpRequest();
-               xhttp.onreadystatechange = function() {
+               document.getElementById("people_firstname_ht").removeAttribute("hidden");
+               document.getElementById("people_lastname_ht").removeAttribute("hidden");
+               document.getElementById("people_contact_info_ht").removeAttribute("hidden");
+               document.getElementById("people_notes_ht").removeAttribute("hidden");
+               document.getElementById("people_firstname_ht").setAttribute("required", "");
+               document.getElementById("people_lastname_ht").setAttribute("required", "");
+               document.getElementById("people_contact_info_ht").setAttribute("required", "");
+               document.getElementById("people_notes_ht").setAttribute("required", "");
+               var people_xhttp = new XMLHttpRequest();
+               people_xhttp.onreadystatechange = function() {
                   if (this.readyState == 4 && this.status == 200) {
                      var data = JSON.parse(this.responseText);
 
@@ -250,24 +261,125 @@
                      if (data.length != 0) {
 
                         //autofilling the data
-                        document.getElementById("LOGid_ht").value = data[0]['LOGid'];
-                        document.getElementById("firstname_ht").value = data[0]['firstName'];
-                        document.getElementById("lastname_ht").value = data[0]['lastName'];
-                        document.getElementById("contact_info_ht").value = data[0]['contactInfo'];
-                        document.getElementById("notes_ht").value = data[0]['notes'];
+                        document.getElementById("people_LOGid_ht").value = data[0]['LOGid'];
+                        document.getElementById("people_firstname_ht").value = data[0]['firstname'];
+                        document.getElementById("people_lastname_ht").value = data[0]['lastName'];
+                        document.getElementById("people_contact_info_ht").value = data[0]['contactInfo'];
+                        document.getElementById("people_notes_ht").value = data[0]['notes'];
 
                         document.getElementById("name_ht").value = data[0]['firstName']+' '+data[0]['lastName'];
-                        document.getElementById("name_ht").setAttribute("readonly", "");
 
-                        document.getElementById("firstname_ht").setAttribute("hidden", "");
-                        document.getElementById("lastname_ht").setAttribute("hidden", "");
-                        document.getElementById("contact_info_ht").setAttribute("hidden", "");
-                        document.getElementById("notes_ht").setAttribute("hidden", "");
+                        document.getElementById("people_firstname_ht").setAttribute("hidden", "");
+                        document.getElementById("people_lastname_ht").setAttribute("hidden", "");
+                        document.getElementById("people_contact_info_ht").setAttribute("hidden", "");
+                        document.getElementById("people_notes_ht").setAttribute("hidden", "");
                      }
                   }
                };
-               xhttp.open("GET", "/people_request?login_qu="+document.getElementById("Login_ht").value, true); 
-               xhttp.send();
+               people_xhttp.open("GET", "/people_request?login_qu="+document.getElementById("people_Login_ht").value, true); 
+               people_xhttp.send();
+            });
+
+            /*When the people_firstname and last name values are edited, modify the name field to auto adapt them*/
+            var people_firstname_JS = document.getElementById("people_firstname_ht");
+            people_firstname_JS.addEventListener('change', function (event) {
+               document.getElementById("name_ht").value = document.getElementById("people_firstname_ht").value + ' ' + document.getElementById("people_lastname_ht").value;
+            });
+
+
+            var people_lastname_JS = document.getElementById("people_lastname_ht");
+            people_lastname_JS.addEventListener('change', function (event) {
+               document.getElementById("name_ht").value = document.getElementById("people_firstname_ht").value + ' ' + document.getElementById("people_lastname_ht").value;
+            });
+
+            /*
+            Dynamically add in team info if it exists otherwise ask for info, hide/unhide
+            */
+            var teams_TEid_JS = document.getElementById("teams_teamName_ht");
+            //var xhttp = new XMLHttpRequestEventTarget()
+
+            teams_TEid_JS.addEventListener('change', function (event) {
+               document.getElementById("teams_TEid_ht").value = "";
+               document.getElementById("teams_description_ht").value = "";
+               document.getElementById("teams_notes_ht").value = "";
+               document.getElementById("name_ht").value = "";
+
+               //unhide the elements
+               document.getElementById("teams_description_ht").removeAttribute("hidden");
+               document.getElementById("teams_notes_ht").removeAttribute("hidden");
+
+               //create the AJAX request
+               var teams_xhttp = new XMLHttpRequest();
+               teams_xhttp.onreadystatechange = function() {
+                  if (this.readyState == 4 && this.status == 200) {
+                     var data = JSON.parse(this.responseText);
+
+                     console.log(data); //throwing to the console log
+
+                     //if the database found the user, auto populating the 'teams' element of the form
+                     if (data.length != 0) {
+
+                        //autofilling the data
+                        document.getElementById("teams_TEid_ht").value = data[0]['TEid'];
+                        document.getElementById("teams_description_ht").value = data[0]['description'];
+                        document.getElementById("teams_notes_ht").value = data[0]['notes'];
+                     }
+                  }
+               };
+               teams_xhttp.open("GET", "/teams_request?teamname_qu="+document.getElementById("teams_teamName_ht").value, true); 
+               teams_xhttp.send();
+            });
+
+            /*
+            trigger INSERT queries for adding people and adding teams
+            */
+            var addPersonRequest_JS = document.getElementById("addPersonRequest");
+            var addTeamRequest_JS = document.getElementById("addTeamRequest");
+
+            addPersonRequest_JS.addEventListener('click', function (event) {
+
+               //create the AJAX request
+               var people_add_xhttp = new XMLHttpRequest();
+               people_add_xhttp.onreadystatechange = function() {
+                  if (this.readyState == 4 && this.status == 200) {
+                     var data = JSON.parse(this.responseText);
+
+                     console.log(data); //throwing to the console log
+                  }
+               };
+               people_add_xhttp.open("POST", "/addPersonRequest", true); 
+               people_add_xhttp.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+
+               people_add_xhttp.send(JSON.stringify({
+                  "LOGid":document.getElementById("people_LOGid_ht").value,
+                  "login":document.getElementById("people_Login_ht").value, 
+                  "firstName":document.getElementById("people_firstname_ht").value,
+                  "lastName":document.getElementById("people_lastname_ht").value,
+                  "contactInfo":document.getElementById("people_contact_info_ht").value,
+                  "notes":document.getElementById("people_notes_ht").value,
+                  "TEid":document.getElementById("teams_TEid_ht").value}));
+            });
+
+            /*
+            trigger INSERT queries for adding people and adding teams
+            */
+            addTeamRequest_JS.addEventListener('click', function (event) {
+
+               //create the AJAX request
+               var team_add_xhttp = new XMLHttpRequest();
+               team_add_xhttp.onreadystatechange = function() {
+                  if (this.readyState == 4 && this.status == 200) {
+                     var data = JSON.parse(this.responseText);
+
+                     console.log(data); //throwing to the console log
+                  }
+               };
+               team_add_xhttp.open("POST", "/addTeamRequest", true);
+               team_add_xhttp.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+
+               team_add_xhttp.send(JSON.stringify({"teamName":document.getElementById("teams_teamName_ht").value,
+                  'description':document.getElementById("teams_description_ht").value,
+                  'notes':document.getElementById("teams_notes_ht").value}));
             });
 
         //-->

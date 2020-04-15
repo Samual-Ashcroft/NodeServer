@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const mysql2 = require('mysql2');
+var bodyParser = require("body-parser");
 
 const logger = require('./middleware/logger')
 const app = express();
@@ -20,10 +21,8 @@ app.set("view engine", "hbs");
 
 // Init middleware
 app.use(logger);
-
-// Body Parser Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // Set a static folder
 app.use(express.static(path.join(__dirname, 'public')));
@@ -32,6 +31,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) =>{
     res.render('index');
 });
+
+//Handle AJAX requests
+//Query the DB if a login id exists and send back data for autofill
 app.get('/people_request', (req, res) =>{
     console.log(req.query.login_qu);
 
@@ -42,43 +44,71 @@ app.get('/people_request', (req, res) =>{
         res.json(data);
     });
 });
+//Query the db if a team exists and send back data for autofill /teams_request
+app.get('/teams_request', (req, res) =>{
+    console.log(req.query.teamname_qu);
 
-//
-
-/*app.get('/butt', (req, res) =>{
-    // insert query
-    mysql.query(
-        'INSERT INTO people (firstName, lastName, contactInfo, notes) VALUES (?, ?, ?, ?)',
-        ['Bob', 'Barker', 'bob@fridge.com', 'Bob is a furious advocate for attack helicoptors'],
-        function (err, rows) {
-            // rows contains info about what was inserted
-            console.log(rows);
-            console.log('id of the inserted row', rows.insertId);
-        }
-    );
-});
-
-app.get('/buttocks', (req, res) =>{
     // select query
-    mysql.query('SELECT * FROM people', 
+    mysql.query('SELECT * FROM teams WHERE teamName = ?', [req.query.teamname_qu],
     function(err, data) {
         console.log(data);
         res.json(data);
     });
-});*/
+});
 
-app.post('/submit', (req, res) =>{
-    res.json(req.body);
-    /*{"Login":"123",
-    "Name":"Placeholder Person", "Team":"12",
-    "ProcName":"afsdf", "OldDesc":"gjhg",
-    "NoStaff":"6", "feature_1":"sdgas",
-    "feature_2":"yes","feature_3":"ddddddd",
-    "maintenance":"ongoing maintenencement",
-    "stakeHolder_1":"banana","stakeHolder_2":"apple",
-    "stakeHolder_3":"Jeffers","Attach":"export (6).xml"} */
-
-})
+//INSERT queries here
+app.post('/addPersonRequest', (req, res) =>{
+    // insert query
+    mysql.query(
+        'INSERT INTO people (login, firstName, lastName, contactInfo, notes) VALUES (?, ?, ?, ?, ?)',
+        [req.body.login, req.body.firstName, req.body.lastName, req.body.contactInfo, req.body.notes],
+        function (err, rows) {
+            // rows contains info about what was inserted
+            //console.log(req.body);
+            console.log(err);
+            
+            if (req.body.TEid != -1 && !err ) {
+                console.log('id of the inserted row', rows.insertId);
+                // insert query
+                mysql.query(
+                    'INSERT INTO team_membership (TEid, LOGid) VALUES (?, ?)',
+                    [req.body.TEid, rows.insertId],
+                    function (err, rows) {
+                        // rows contains info about what was inserted
+                        //console.log(req.body);
+                        console.log(err);
+                });
+            } else if (req.body.LOGid != -1 && req.body.TEid != -1) {
+                // select query
+                mysql.query('SELECT TEid, LOGid FROM team_membership WHERE TEid = ? AND LOGid = ?', [req.body.TEid, req.body.LOGid],
+                function(err, data) {
+                    console.log(data);
+                    if (data.length == 0) {
+                        // insert query
+                        mysql.query(
+                            'INSERT INTO team_membership (TEid, LOGid) VALUES (?, ?)',
+                            [req.body.TEid, req.body.LOGid],
+                            function (err, rows) {
+                                console.log(err);
+                        });
+                    };
+                });
+            };
+    });
+});
+app.post('/addTeamRequest', (req, res) =>{
+    // insert query
+    console.log('Uh huh');
+    mysql.query(
+        'INSERT INTO teams (teamName, description, notes) VALUES (?, ?, ?)',
+        [req.body.teamName, req.body.description, req.body.notes],
+        function (err, rows) {
+            // rows contains info about what was inserted
+            console.log(req.body);
+            
+            console.log('id of the inserted row', rows.insertId);
+    });
+});
 
 const PORT = process.env.PORT || 5000;
 
