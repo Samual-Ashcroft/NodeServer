@@ -12,8 +12,14 @@
         <h1>Fraudtech feature request</h1>
     </body>
 
+
+
+
+
+
+
+
 </head>
-   
    <body>
       <form action = "./submit" id = "feature_request_form" name = "feature_request_form" onsubmit = "return(validate());" method = "POST">
          <table cellspacing = "2" cellpadding = "2" border = "1">
@@ -36,10 +42,10 @@
                <td align = "right">Login</td>
                <td>
                   <input hidden type = "text" id = "people_LOGid_ht" name = "people_LOGid" value = "-1"/>
-                  <input type = "text" id = "people_Login_ht" name = "people_Login" placeholder = "Enter your unique login id here" required/>
+                  <input type = "text" id = "people_Login_ht" name = "people_Login" placeholder = "Enter your unique login id here" />
                   <input hidden type = "text" id = "people_firstname_ht" name = "people_firstname" placeholder = "Enter your first name here" />
                   <input hidden type = "text" id = "people_lastname_ht" name = "people_lastname" placeholder = "Enter your last name here" />
-                  <input hidden type = "text" id = "people_contact_info_ht" name = "people_contact_info" size = "42" placeholder = "Enter your contact info here" required/>
+                  <input hidden type = "text" id = "people_contact_info_ht" name = "people_contact_info" size = "42" placeholder = "Enter your contact info here" />
                   <textarea hidden id = "people_notes_ht" name = "people_notes" rows = "5" cols = "80" placeholder = "Enter any notes here" /></textarea>
                </td>
                <td id = "addPeople">
@@ -84,8 +90,13 @@
             <tr>
                <td align = "right">Please identify all known stakeholders of the current business process</td>
                <td id = "stakeHolders">
-                  <input type= "button" value = "Add Stakeholder" id="addStakeHolder">
+                  <input type= "button" value = "Add Stakeholder Discussion" id="addStakeHolder">
                </td>
+            </tr>
+
+            <tr>
+               <td align = "right">What Management Information reporting requirements are needed for this business process/tool?</td>
+               <td><textarea id = "reporting" name = "reporting" rows = "5" cols = "80" placeholder = "Describe here"></textarea></td>
             </tr>
 
             <tr>
@@ -217,6 +228,15 @@
                new_text.setAttribute('id', 'stakeHolder_' + n2);
                new_text.setAttribute('name', 'stakeHolder_' + n2);
                new_text.setAttribute('placeholder', 'Enter the stakeholders name here');
+
+               // create new textarea
+               var new_textarea = document.createElement('textarea');
+               new_textarea.setAttribute('id', 'SH_discussion_' + n1);
+               new_textarea.setAttribute('name', 'SH_discussion_' + n1);
+               //rows = "5" cols = "80"
+               new_textarea.setAttribute('rows', '5');
+               new_textarea.setAttribute('cols', '80');
+               new_textarea.setAttribute('placeholder', 'Enter the stakeholder discussion here or leave blank if none');
                
                // create label for input[text]
                var new_label = document.createElement('label');
@@ -226,6 +246,7 @@
                // add label and textarea to the form
                element2.appendChild(new_label);
                element2.appendChild(new_text);
+               element2.appendChild(new_textarea);
             });
 
             /*Dynamically check the database for that people_LOGid, 
@@ -236,7 +257,6 @@
             //var xhttp = new XMLHttpRequestEventTarget()
 
             people_LOGid_JS.addEventListener('change', function (event) {
-               document.getElementById("people_LOGid_ht").value = "";
                document.getElementById("people_firstname_ht").value = "";
                document.getElementById("people_lastname_ht").value = "";
                document.getElementById("people_contact_info_ht").value = "";
@@ -246,10 +266,8 @@
                document.getElementById("people_lastname_ht").removeAttribute("hidden");
                document.getElementById("people_contact_info_ht").removeAttribute("hidden");
                document.getElementById("people_notes_ht").removeAttribute("hidden");
-               document.getElementById("people_firstname_ht").setAttribute("required", "");
-               document.getElementById("people_lastname_ht").setAttribute("required", "");
-               document.getElementById("people_contact_info_ht").setAttribute("required", "");
-               document.getElementById("people_notes_ht").setAttribute("required", "");
+
+               //Building the AJAX get request
                var people_xhttp = new XMLHttpRequest();
                people_xhttp.onreadystatechange = function() {
                   if (this.readyState == 4 && this.status == 200) {
@@ -344,7 +362,36 @@
                   if (this.readyState == 4 && this.status == 200) {
                      var data = JSON.parse(this.responseText);
 
-                     console.log(data); //throwing to the console log
+                     //console.log(data); //throwing to the console log
+                     
+                     //Building the AJAX get request
+                     var people_xhttp = new XMLHttpRequest();
+                     people_xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                           var data = JSON.parse(this.responseText);
+
+                           console.log(data); //throwing to the console log
+
+                           //if the database found the user, auto populating the 'people' element of the form
+                           if (data.length != 0) {
+
+                              //autofilling the data
+                              document.getElementById("people_LOGid_ht").value = data[0]['LOGid'];
+                              document.getElementById("people_firstname_ht").value = data[0]['firstname'];
+                              document.getElementById("people_lastname_ht").value = data[0]['lastName'];
+                              document.getElementById("people_contact_info_ht").value = data[0]['contactInfo'];
+                              document.getElementById("people_notes_ht").value = data[0]['notes'];
+
+                              document.getElementById("name_ht").value = data[0]['firstName']+' '+data[0]['lastName'];
+
+                              document.getElementById("people_firstname_ht").setAttribute("hidden", "");
+                              document.getElementById("people_lastname_ht").setAttribute("hidden", "");
+                              document.getElementById("people_contact_info_ht").setAttribute("hidden", "");
+                              document.getElementById("people_notes_ht").setAttribute("hidden", "");
+                           }
+                        }
+                     };
+
                   }
                };
                people_add_xhttp.open("POST", "/addPersonRequest", true); 
